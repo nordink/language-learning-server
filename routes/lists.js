@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const List = require('../models/list');
-const Word = require('../models/Word');
+const Word = require('../models/word');
 
 // Get user's lists
 router.get('/', async (req, res) => {

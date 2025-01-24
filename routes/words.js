@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Word = require('../models/Word');
+const Word = require('../models/word');
 
 // Get words for a specific list
 router.get('/list/:listId', async (req, res) => {

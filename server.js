@@ -9,9 +9,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['https://learningapp57.netlify.app', 'http://localhost:5173'],
+  origin: 'https://learningapp57.netlify.app',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 

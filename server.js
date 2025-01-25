@@ -1,11 +1,20 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const { auth } = require('express-oauth2-jwt-bearer');
 const wordsRouter = require('./routes/words');
 const listsRouter = require('./routes/lists');
 require('dotenv').config();
 
 const app = express();
+
+// Auth0 middleware
+const jwtCheck = auth({
+  audience: process.env.AUTH0_AUDIENCE,
+  issuerBaseURL: process.env.AUTH0_ISSUER_URL,
+  tokenSigningAlg: 'RS256'
+});
 
 // Middleware
 app.use(cors({
@@ -16,13 +25,14 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(jwtCheck);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Routes - ensure these are functions
+// Routes
 app.use('/api/words', wordsRouter);
 app.use('/api/lists', listsRouter);
 

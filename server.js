@@ -25,7 +25,7 @@ app.get('/health', (req, res) => {
 
 // Auth middleware
 const jwtCheck = auth({
-  audience: 'https://dev-5giozvplijcqa2pc.us.auth0.com/api/v2/',
+  audience: 'https://dev-5giozvplijcqa2pc.us.auth0.com',
   issuerBaseURL: 'https://dev-5giozvplijcqa2pc.us.auth0.com/',
   tokenSigningAlg: 'RS256'
 });

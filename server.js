@@ -63,7 +63,7 @@ app.use('/api/*', (req, res, next) => {
 });
 
 const jwtCheck = auth({
-  audience: 'https://dev-5giozvplijcqa2pc.us.auth0.com',  // Removed /api/v2/
+  audience: 'https://spanish-learning-api',
   issuerBaseURL: 'https://dev-5giozvplijcqa2pc.us.auth0.com/',
   tokenSigningAlg: 'RS256'
 });

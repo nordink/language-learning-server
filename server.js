@@ -49,21 +49,23 @@ app.get('/health', (req, res) => {
   }
 });
 
-// Auth middleware
-const jwtCheck = auth({
-  audience: 'https://dev-5giozvplijcqa2pc.us.auth0.com',
-  issuerBaseURL: 'https://dev-5giozvplijcqa2pc.us.auth0.com/',
-  tokenSigningAlg: 'RS256'
-});
-
 // Add debug middleware before protected routes
 app.use('/api/*', (req, res, next) => {
-  console.log('Auth Debug:', {
+  console.log('Incoming request debug:', {
     path: req.path,
-    hasAuthHeader: !!req.headers.authorization,
-    authHeader: req.headers.authorization?.substring(0, 20) + '...'
+    method: req.method,
+    headers: {
+      auth: req.headers.authorization?.substring(0, 30) + '...',
+      contentType: req.headers['content-type']
+    }
   });
   next();
+});
+
+const jwtCheck = auth({
+  audience: 'https://dev-5giozvplijcqa2pc.us.auth0.com',  // Removed /api/v2/
+  issuerBaseURL: 'https://dev-5giozvplijcqa2pc.us.auth0.com/',
+  tokenSigningAlg: 'RS256'
 });
 
 // Protected routes

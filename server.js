@@ -10,11 +10,20 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: ['https://learningapp57.netlify.app', 'http://localhost:5173'],
+  origin: [
+    'https://aquamarine-shortbread-a36146.netlify.app',
+    'http://localhost:5173'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Add a test endpoint
+app.get('/api/test-cors', (req, res) => {
+  console.log('Test CORS endpoint hit');
+  res.json({ message: 'CORS test successful!' });
+});
 
 app.use(express.json());
 

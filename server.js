@@ -1,18 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-console.log('SERVER STARTING WITH CORS DOMAINS:', [
-  'https://aquamarine-shortbread-a36146.netlify.app',
-  'http://localhost:5173']);
 const { auth } = require('express-oauth2-jwt-bearer');
 const wordsRouter = require('./routes/words');
 const listsRouter = require('./routes/lists');
 require('dotenv').config();
 
+console.log('SERVER STARTING WITH CORS DOMAINS:', [
+  'https://aquamarine-shortbread-a36146.netlify.app',
+  'http://localhost:5173'
+]);
+
 const app = express();
 
-// CORS configuration
-app.use(cors({
+// Store CORS config so we can access it later
+const corsOptions = {
   origin: [
     'https://aquamarine-shortbread-a36146.netlify.app',
     'http://localhost:5173'
@@ -20,21 +22,31 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
 
-// Add a test endpoint
-app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'healthy',
-    corsOrigins: app.get('cors').origin,
-    timestamp: new Date().toISOString()
-  });
-});
+// CORS configuration
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// Health check (before auth middleware)
+// Basic error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ error: err.message });
+});
+
+// Health check with error handling
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy' });
+  try {
+    res.json({ 
+      status: 'healthy',
+      corsOrigins: corsOptions.origin,
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV
+    });
+  } catch (err) {
+    console.error('Health check error:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Auth middleware
@@ -48,12 +60,31 @@ const jwtCheck = auth({
 app.use('/api/words', jwtCheck, wordsRouter);
 app.use('/api/lists', jwtCheck, listsRouter);
 
-// MongoDB connection
+// MongoDB connection with enhanced error logging
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .then(() => {
+    console.log('Connected to MongoDB');
+    console.log('Database connection successful');
+  })
+  .catch(err => {
+    console.error('MongoDB connection error details:', {
+      message: err.message,
+      code: err.code,
+      name: err.name
+    });
+  });
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log('CORS configured with origins:', corsOptions.origin);
+});
+
+// Global error handling
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
 });

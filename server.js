@@ -56,6 +56,16 @@ const jwtCheck = auth({
   tokenSigningAlg: 'RS256'
 });
 
+// Add debug middleware before protected routes
+app.use('/api/*', (req, res, next) => {
+  console.log('Auth Debug:', {
+    path: req.path,
+    hasAuthHeader: !!req.headers.authorization,
+    authHeader: req.headers.authorization?.substring(0, 20) + '...'
+  });
+  next();
+});
+
 // Protected routes
 app.use('/api/words', jwtCheck, wordsRouter);
 app.use('/api/lists', jwtCheck, listsRouter);

@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+console.log('SERVER STARTING WITH CORS DOMAINS:', [
+  'https://aquamarine-shortbread-a36146.netlify.app',
+  'http://localhost:5173']);
 const { auth } = require('express-oauth2-jwt-bearer');
 const wordsRouter = require('./routes/words');
 const listsRouter = require('./routes/lists');
@@ -20,11 +23,13 @@ app.use(cors({
 }));
 
 // Add a test endpoint
-app.get('/api/test-cors', (req, res) => {
-  console.log('Test CORS endpoint hit');
-  res.json({ message: 'CORS test successful!' });
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    corsOrigins: app.get('cors').origin,
+    timestamp: new Date().toISOString()
+  });
 });
-
 app.use(express.json());
 
 // Health check (before auth middleware)

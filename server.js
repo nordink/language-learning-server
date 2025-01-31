@@ -24,8 +24,12 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-// CORS configuration
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'https://aquamarine-shortbread-a36146.netlify.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Token debug middleware

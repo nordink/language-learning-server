@@ -43,28 +43,27 @@ router.post('/', async (req, res) => {
 // Delete list and its words
 router.delete('/:id', async (req, res) => {
   try {
+    console.log('Delete list request:', {
+      listId: req.params.id,
+      userId: req.user?.sub
+    });
+    
     const list = await List.findOne({ 
       _id: req.params.id,
       userId: req.user.sub 
     });
     
     if (!list) {
+      console.log('List not found:', req.params.id);
       return res.status(404).json({ message: 'List not found' });
     }
 
-    // Delete all words in the list
+    console.log('Found list to delete:', list._id);
+
+    // Delete words first
     await Word.deleteMany({
       listId: req.params.id,
       userId: req.user.sub
     });
-
-    // Delete the list
-    await list.remove();
-    
-    res.json({ message: 'List and associated words deleted' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
 
 module.exports = router;

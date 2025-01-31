@@ -6,15 +6,25 @@ const Word = require('../models/word');
 // Get user's lists
 router.get('/', async (req, res) => {
   try {
-    console.log('User ID:', req.user?.sub);
+    console.log('Lists Route Debug:', {
+      hasUser: !!req.user,
+      userSub: req.user?.sub,
+      fullUser: JSON.stringify(req.user)
+    });
+    
     const lists = await List.find({ userId: req.user?.sub });
-    console.log('Found lists:', lists);
+    console.log('Lists Query Result:', {
+      count: lists.length,
+      lists: JSON.stringify(lists)
+    });
+    
     res.json(lists);
   } catch (err) {
     console.error('Error fetching lists:', err);
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Create new list
 router.post('/', async (req, res) => {

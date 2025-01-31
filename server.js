@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { auth } = require('express-oauth2-jwt-bearer');
+const { auth, claimCheck } = require('express-oauth2-jwt-bearer');
+const jwt = require('jsonwebtoken');
 const wordsRouter = require('./routes/words');
 const listsRouter = require('./routes/lists');
-require('dotenv').config();
 
 console.log('SERVER STARTING WITH CORS DOMAINS:', [
   'https://aquamarine-shortbread-a36146.netlify.app',
@@ -28,6 +28,26 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Token debug middleware
+app.use('/api/*', (req, res, next) => {
+  console.log('Auth Debug:', {
+    hasAuth: !!req.headers.authorization,
+    authHeader: req.headers.authorization?.substring(0, 30) + '...'
+  });
+
+  const token = req.headers.authorization?.split(' ')[1];
+  if (token) {
+    try {
+      const decoded = jwt.decode(token);
+      console.log('Decoded token payload:', decoded);
+      req.user = decoded;
+    } catch (err) {
+      console.error('Token decode error:', err);
+    }
+  }
+  next();
+});
+
 // Basic error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
@@ -47,19 +67,6 @@ app.get('/health', (req, res) => {
     console.error('Health check error:', err);
     res.status(500).json({ error: err.message });
   }
-});
-
-// Add debug middleware before protected routes
-app.use('/api/*', (req, res, next) => {
-  console.log('Incoming request debug:', {
-    path: req.path,
-    method: req.method,
-    headers: {
-      auth: req.headers.authorization?.substring(0, 30) + '...',
-      contentType: req.headers['content-type']
-    }
-  });
-  next();
 });
 
 const jwtCheck = auth({

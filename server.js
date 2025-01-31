@@ -18,8 +18,7 @@ const corsOptions = {
   origin: [
     'https://aquamarine-shortbread-a36146.netlify.app',
     'http://localhost:5173',
-    'https://steepy.org'  
-  ],
+      ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

@@ -98,7 +98,9 @@ mongoose.connect(process.env.MONGO_URL, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
   connectTimeoutMS: 10000,
-  keepAlive: true
+  keepAlive: true,
+   maxPoolSize: 5,  // Limit connections
+  minPoolSize: 1
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {

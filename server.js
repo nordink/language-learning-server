@@ -6,12 +6,22 @@ const jwt = require('jsonwebtoken');
 const wordsRouter = require('./routes/words');
 const listsRouter = require('./routes/lists');
 
-console.log('SERVER STARTING WITH CORS DOMAINS:', [
-  'https://aquamarine-shortbread-a36146.netlify.app',
-  'http://localhost:5173'
-]);
-
 const app = express();
+
+// CORS headers middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://aquamarine-shortbread-a36146.netlify.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 
 // Store CORS config so we can access it later
 const corsOptions = {

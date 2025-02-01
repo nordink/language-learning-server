@@ -94,7 +94,7 @@ app.use('/api/words', jwtCheck, wordsRouter);
 app.use('/api/lists', jwtCheck, listsRouter);
 
 // MongoDB connection with enhanced error logging
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGO_URL, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
   connectTimeoutMS: 10000,
@@ -104,7 +104,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 }).catch(err => {
   console.error('MongoDB connection error:', err);
 });
-  
+
 mongoose.connection.on('error', err => {
   console.error('MongoDB connection error:', err);
 });

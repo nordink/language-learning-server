@@ -106,6 +106,14 @@ mongoose.connect(process.env.MONGODB_URI)
       name: err.name
     });
   });
+  
+mongoose.connection.on('error', err => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

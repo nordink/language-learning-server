@@ -10,7 +10,7 @@ const app = express();
 
 // CORS headers middleware
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://aquamarine-shortbread-a36146.netlify.app');
+  res.header('Access-Control-Allow-Origin', 'https://steepy.org');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 // Store CORS config so we can access it later
 const corsOptions = {
   origin: [
-    'https://aquamarine-shortbread-a36146.netlify.app',
+    'https://steepy.org',
     'http://localhost:5173'
   ].map(origin => origin.trim()),
   credentials: true,
@@ -35,7 +35,7 @@ const corsOptions = {
 };
 
 app.use(cors({
-  origin: 'https://aquamarine-shortbread-a36146.netlify.app',
+  origin: 'https://steepy.org',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

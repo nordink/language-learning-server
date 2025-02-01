@@ -25,7 +25,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
 // Create new list
 router.post('/', async (req, res) => {
   const list = new List({
@@ -59,11 +58,19 @@ router.delete('/:id', async (req, res) => {
     }
 
     console.log('Found list to delete:', list._id);
-
     // Delete words first
     await Word.deleteMany({
       listId: req.params.id,
       userId: req.user.sub
     });
+
+    // Added missing: Delete the list and send response
+    await list.deleteOne();
+    res.json({ message: 'List deleted successfully' });
+  } catch (err) {
+    console.error('Delete list error:', err);
+    res.status(500).json({ message: err.message });
+  }
+});
 
 module.exports = router;

@@ -73,4 +73,26 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Update list name
+router.put('/:id', async (req, res) => {
+  try {
+    const list = await List.findOne({ 
+      _id: req.params.id,
+      userId: req.user.sub 
+    });
+    
+    if (!list) {
+      return res.status(404).json({ message: 'List not found' });
+    }
+
+    list.name = req.body.name;
+    await list.save();
+    
+    res.json(list);
+  } catch (err) {
+    console.error('Error updating list:', err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;

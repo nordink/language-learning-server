@@ -94,25 +94,39 @@ app.use('/api/words', jwtCheck, wordsRouter);
 app.use('/api/lists', jwtCheck, listsRouter);
 
 // MongoDB connection with enhanced error logging
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
   connectTimeoutMS: 10000,
   keepAlive: true,
-   maxPoolSize: 5,  // Limit connections
+  maxPoolSize: 5,
   minPoolSize: 1
 }).then(() => {
-  console.log('Connected to MongoDB');
+  console.log('Connected to MongoDB Successfully');
+  console.log('Connection Details:', {
+    host: mongoose.connection.host,
+    port: mongoose.connection.port,
+    name: mongoose.connection.name
+  });
 }).catch(err => {
-  console.error('MongoDB connection error:', err);
+  console.error('MongoDB Connection Error:', {
+    message: err.message,
+    code: err.code,
+    errorObject: err
+  });
 });
 
+// Add connection event listeners
 mongoose.connection.on('error', err => {
-  console.error('MongoDB connection error:', err);
+  console.error('Mongoose connection error:', err);
+});
+
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to DB');
 });
 
 mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected');
+  console.log('Mongoose disconnected');
 });
 
 const port = process.env.PORT || 3001;

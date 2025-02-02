@@ -5,7 +5,7 @@ const { auth, claimCheck } = require('express-oauth2-jwt-bearer');
 const jwt = require('jsonwebtoken');
 const wordsRouter = require('./routes/words');
 const listsRouter = require('./routes/lists');
-const dbName = 'steep3';
+const dbName = 'steep2';
 
 
 const app = express();

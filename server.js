@@ -101,7 +101,6 @@ mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 30000,  // Increased timeout
   socketTimeoutMS: 45000,
   connectTimeoutMS: 30000,
-  keepAlive: true,
   maxPoolSize: 5,
   minPoolSize: 1,
   useNewUrlParser: true

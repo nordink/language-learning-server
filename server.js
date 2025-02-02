@@ -5,6 +5,8 @@ const { auth, claimCheck } = require('express-oauth2-jwt-bearer');
 const jwt = require('jsonwebtoken');
 const wordsRouter = require('./routes/words');
 const listsRouter = require('./routes/lists');
+const dbName = 'spanish-learning';
+
 
 const app = express();
 
@@ -95,24 +97,27 @@ app.use('/api/lists', jwtCheck, listsRouter);
 
 // MongoDB connection with enhanced error logging
 mongoose.connect(process.env.MONGODB_URI, {
-  serverSelectionTimeoutMS: 5000,
+  dbName: dbName,  // Explicitly set database name
+  serverSelectionTimeoutMS: 30000,  // Increased timeout
   socketTimeoutMS: 45000,
-  connectTimeoutMS: 10000,
+  connectTimeoutMS: 30000,
   keepAlive: true,
   maxPoolSize: 5,
-  minPoolSize: 1
+  minPoolSize: 1,
+  useNewUrlParser: true
 }).then(() => {
-  console.log('Connected to MongoDB Successfully');
+  console.log(`Connected to MongoDB Database: ${dbName}`);
   console.log('Connection Details:', {
     host: mongoose.connection.host,
     port: mongoose.connection.port,
-    name: mongoose.connection.name
+    name: mongoose.connection.name,
+    models: Object.keys(mongoose.models)
   });
 }).catch(err => {
   console.error('MongoDB Connection Error:', {
     message: err.message,
     code: err.code,
-    errorObject: err
+    stack: err.stack
   });
 });
 

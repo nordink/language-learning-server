@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const wordSchema = new mongoose.Schema({
   listId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -17,6 +15,10 @@ const wordSchema = new mongoose.Schema({
   english: {
     type: String,
     required: true
+  },
+  optionalClue: {    // Add this field
+    type: String,
+    required: false  // Make it optional
   },
   exampleSentences: [{
     spanish: String,

@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const wordSchema = new mongoose.Schema({
   listId: {
     type: mongoose.Schema.Types.ObjectId,
